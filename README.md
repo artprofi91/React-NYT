@@ -1,2 +1,0 @@
-# React-NYT
-React-NYT
