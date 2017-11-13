@@ -1,13 +1,8 @@
-// Include React as a dependency
 var React = require("react");
-
-// Include our helpers for API calls
 var helpers = require("../../utils/helpers");
-
-// Results Component Declaration
 var Results = React.createClass({
 
-  // Here we will save states for the contents we save
+  // initiel var - blank
   getInitialState: function() {
     return {
       title: "",
@@ -15,22 +10,17 @@ var Results = React.createClass({
       pubdate: ""
     };
   },
-
-  // This code handles the sending of the search terms to the parent Search component
+  // search term to Search Component
   handleClick: function(item) {
-    console.log("CLICKED");
     console.log(item);
-
     helpers.postSaved(item.headline.main, item.pub_date, item.web_url).then(function() {
       console.log(item.web_url);
     });
   },
 
-  // A helper method for mapping through our articles and outputting some HTML
   renderArticles: function() {
     return this.props.results.docs.map(function(article, index) {
 
-      // Each article thus reperesents a list group item with a known index
       return (
         <div key={index}>
           <li className="list-group-item">
@@ -42,11 +32,6 @@ var Results = React.createClass({
                 <a href={article.web_url} rel="noopener noreferrer" target="_blank">
                   <button className="btn btn-default ">View Article</button>
                 </a>
-
-                {/*
-                  By using an arrow function callback to wrap this.handleClick,
-                  we can pass in an article as an argument
-                */}
                 <button className="btn btn-primary" onClick={() => this.handleClick(article)}>Save</button>
               </span>
             </h3>
@@ -61,7 +46,7 @@ var Results = React.createClass({
 
   },
 
-  // A helper method for rendering a container to hold all of our articles
+  // hold articles
   renderContainer: function() {
     return (
       <div className="main-container">
@@ -88,22 +73,20 @@ var Results = React.createClass({
     );
   },
   render: function() {
-    // If we have no articles, render this HTML
+    // if no articles
     if (!this.props.results.docs) {
       return (
         <li className="list-group-item">
           <h3>
             <span>
-              <em>Enter search terms to begin...</em>
+              <em>Enter search term, please.</em>
             </span>
           </h3>
         </li>
       );
     }
-    // If we have articles, return this.renderContainer() which in turn, returns all the articles
     return this.renderContainer();
   }
 });
 
-// Export the module back to the route
 module.exports = Results;
