@@ -1,32 +1,27 @@
-// Include React as a dependency
 import React, { Component } from 'react'
 
-// Query Component Declaration
 class Query extends Component {
-  // Here we set initial variables for the component to be blanks
+  // var declaration
   state = { 
-    search: "baseball",
-    start: "2006",
-    end: "2016"
+    search: "Putin Russia",
+    start: "2016",
+    end: "2017"
   }
 
-  // Whenever we detect ANY change in the textbox, we register it.
+  // change in the textbox
   handleChange = (event) => {
-    // Here we create syntax to capture any change in text to the query terms (pre-search).
-    // See this Stack Overflow answer for more details:
-    // http://stackoverflow.com/questions/21029999/react-js-identifying-different-inputs-with-one-onchange-handler
     var newState = {};
     newState[event.target.id] = event.target.value;
     this.setState(newState);
   }
 
-  // This code handles the sending of the search terms to the parent Search component
+  // searct term to Search Component
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.updateSearch(this.state.search, this.state.start, this.state.end);
   }
 
-  // Here we render the Query component
+  // render Query Component
   render() {
 
     return (
@@ -44,8 +39,6 @@ class Query extends Component {
                 </h1>
               </div>
               <div className="panel-body">
-
-                {/* Note how we associate the text-box inputs with the state values */}
                 <form onSubmit={this.handleSubmit}>
                   <div className="form-group">
                     <h4 className=""><strong>Topic</strong></h4>
@@ -80,8 +73,6 @@ class Query extends Component {
                     />
 
                   </div>
-
-                  {/* Here we create the onClick event that triggers the HandleSubmit */}
                   <div className="pull-right">
                     <button
                       type="submit"
@@ -102,5 +93,4 @@ class Query extends Component {
   }
 };
 
-// Export the module back to the route
 export default Query;
