@@ -1,5 +1,3 @@
-// Controller for our scraper
-// ============================
 var db = require("../models");
 var scrape = require("../scripts/scrape");
 
@@ -14,20 +12,20 @@ module.exports = {
       .then(function(dbHeadline) {
         if (dbHeadline.length === 0) {
           res.json({
-            message: "No new articles today. Check back tomorrow!"
+            message: "No new articles."
           });
         }
         else {
-          // Otherwise send back a count of how many new articles we got
+          // how many new articles
           res.json({
             message: "Added " + dbHeadline.length + " new articles!"
           });
         }
       })
       .catch(function(err) {
-        // This query won't insert articles with duplicate headlines, but it will error after inserting the others
+        // error after inserting the others articles (not duplicate)
         res.json({
-          message: "Scrape complete!!"
+          message: "Scrape complete!"
         });
       });
   }

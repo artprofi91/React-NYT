@@ -1,9 +1,7 @@
-// Controller for our notes
-// ========================
 var db = require("../models");
 
 module.exports = {
-  // Find one note
+  // find one note
   findOne: function(req, res) {
     db.Note
       .findOne(req.query)
@@ -11,7 +9,7 @@ module.exports = {
         res.json(dbNote);
     });
   },
-  // Create a new note
+  // create note
   create: function(req, res) {
     db.Note
       .create(req.body)
@@ -19,7 +17,7 @@ module.exports = {
         res.json(dbNote);
     });
   },
-  // Delete a note with a given id
+  // delete note
   delete: function(req, res) {
     db.Note
       .remove({ _id: req.params.id })
