@@ -26,6 +26,6 @@
     "build": "webpack -w",
     "dev": "webpack & node server.js"
   },
-  "author": "",
+  "author": "Art",
   "license": "ISC"
 }

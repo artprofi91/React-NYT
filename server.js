@@ -1,15 +1,11 @@
-// Include Server Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-
-// Require Schemas
 var Article = require("./server/model");
 
-// Create Instance of Express
 var app = express();
-var PORT = process.env.PORT || 3000; // Sets an initial port. We'll use this later in our listener
+var PORT = process.env.PORT || 8080; 
 
 // Run Morgan for Logging
 app.use(logger("dev"));
@@ -22,22 +18,18 @@ app.use(express.static("./public"));
 
 // -------------------------------------------------
 
-// MongoDB Configuration configuration
-mongoose.connect("mongodb://admin:reactrocks@ds023593.mlab.com:23593/heroku_pg676kmk");
-var db = mongoose.connection;
+var db = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
-db.on("error", function(err) {
-  console.log("Mongoose Error: ", err);
+mongoose.connect(db, function(error) {
+  if (error) {
+    console.log(error);
+  }
+  else {
+    console.log("We are connected!");
+  }
 });
 
-db.once("open", function() {
-  console.log("Mongoose connection successful.");
-});
 
-
-// -------------------------------------------------
-
-// Route to get all saved articles
 app.get("/api/saved", function(req, res) {
 
   Article.find({})
@@ -52,12 +44,9 @@ app.get("/api/saved", function(req, res) {
     });
 });
 
-// Route to add an article to saved list
 app.post("/api/saved", function(req, res) {
   var newArticle = new Article(req.body);
-
   console.log(req.body);
-
   newArticle.save(function(err, doc) {
     if (err) {
       console.log(err);
@@ -68,11 +57,8 @@ app.post("/api/saved", function(req, res) {
   });
 });
 
-// Route to delete an article from saved list
 app.delete("/api/saved/", function(req, res) {
-
   var url = req.param("url");
-
   Article.find({ url: url }).remove().exec(function(err) {
     if (err) {
       console.log(err);
@@ -83,14 +69,10 @@ app.delete("/api/saved/", function(req, res) {
   });
 });
 
-// Any non API GET routes will be directed to our React App and handled by React Router
 app.get("*", function(req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-
-// -------------------------------------------------
-
 app.listen(PORT, function() {
-  console.log("App listening on PORT: " + PORT);
+  console.log("Listening on port:" + PORT);
 });
