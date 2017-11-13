@@ -1,26 +1,32 @@
-var React = require("react");
-var helpers = require("../../utils/helpers");
-var Results = React.createClass({
+// Include React as a dependency
+import React, { Component } from 'react'
 
-  // initiel var - blank
-  getInitialState: function() {
-    return {
-      title: "",
-      url: "",
-      pubdate: ""
-    };
-  },
-  // search term to Search Component
-  handleClick: function(item) {
-    console.log(item);
+// Include our helpers for API calls
+import helpers from "../../utils/helpers";
+
+// Results Component Declaration
+class Results extends Component {
+  // Here we will save states for the contents we save
+  state = {
+    title: "",
+    url: "",
+    pubdate: ""
+  }
+
+  // This code handles the sending of the search terms to the parent Search component
+  handleClick = (item) => {
+    console.log("CLICKED", item);
+
     helpers.postSaved(item.headline.main, item.pub_date, item.web_url).then(function() {
       console.log(item.web_url);
     });
-  },
+  }
 
-  renderArticles: function() {
-    return this.props.results.docs.map(function(article, index) {
+  // A helper method for mapping through our articles and outputting some HTML
+  renderArticles = () => {
+    return this.props.results.docs.map((article, index) => {
 
+      // Each article thus reperesents a list group item with a known index
       return (
         <div key={index}>
           <li className="list-group-item">
@@ -32,7 +38,12 @@ var Results = React.createClass({
                 <a href={article.web_url} rel="noopener noreferrer" target="_blank">
                   <button className="btn btn-default ">View Article</button>
                 </a>
-                <button className="btn btn-primary" onClick={() => this.handleClick(article)}>Save</button>
+
+                {/*
+                  By using an arrow function callback to wrap this.handleClick,
+                  we can pass in an article as an argument
+                */}
+                <button className="btn btn-primary" onClick={() => { this.handleClick(article)}}>Save</button>
               </span>
             </h3>
             <p>Date Published: {article.pub_date}</p>
@@ -42,12 +53,12 @@ var Results = React.createClass({
         </div>
       );
 
-    }.bind(this));
+    });
 
-  },
+  }
 
-  // hold articles
-  renderContainer: function() {
+  // A helper method for rendering a container to hold all of our articles
+  renderContainer = () => {
     return (
       <div className="main-container">
         <div className="row">
@@ -71,22 +82,24 @@ var Results = React.createClass({
         </div>
       </div>
     );
-  },
-  render: function() {
-    // if no articles
+  }
+  render() {
+    // If we have no articles, render this HTML
     if (!this.props.results.docs) {
       return (
         <li className="list-group-item">
           <h3>
             <span>
-              <em>Enter search term, please.</em>
+              <em>Enter search terms to begin...</em>
             </span>
           </h3>
         </li>
       );
     }
+    // If we have articles, return this.renderContainer() which in turn, returns all the articles
     return this.renderContainer();
   }
-});
+};
 
-module.exports = Results;
+// Export the module back to the route
+export default Results;

@@ -1,47 +1,55 @@
-var React = require("react");
-var helpers = require("../utils/helpers");
-var Main = React.createClass({
+// Include React as a dependency
+import React, { Component } from 'react'
 
-  getInitialState: function() {
-    return { savedArticles: "" };
-  },
+// Include the Helper (for the saved recall)
+import helpers from "../utils/helpers";
 
-  // get articles from db
-  componentDidMount: function() {
-    helpers.getSaved().then(function(articleData) {
+// Create the Main component
+class Saved extends Component {
+  state = {
+    savedArticles: []
+  }
+
+  // When this component mounts, get all saved articles from our db
+  componentDidMount() {
+    helpers.getSaved()
+    .then((articleData) => {
       this.setState({ savedArticles: articleData.data });
       console.log("saved results", articleData.data);
-    }.bind(this));
-  },
+    });
+  }
 
-  // hndle delete/saved articles
-  handleClick: function(item) {
-    console.log(item);
+  // This code handles the deleting saved articles from our database
+  handleClick = (item) => {
+    // Delete the list!
+    helpers.deleteSaved(item.title, item.date, item.url)
+    .then(() => {
 
-    // delete
-    helpers.deleteSaved(item.title, item.date, item.url).then(function() {
-
-      // save
-      helpers.getSaved().then(function(articleData) {
+      // Get the revised list!
+      helpers.getSaved()
+      .then((articleData) => {
         this.setState({ savedArticles: articleData.data });
-      }.bind(this));
+        console.log("saved results", articleData.data);
+      });
 
-    }.bind(this));
-  },
-  renderEmpty: function() {
+    });
+  }
+  // A helper method for rendering the HTML when we have no saved articles
+  renderEmpty = () => {
     return (
       <li className="list-group-item">
         <h3>
           <span>
-            <em>Save your first article, please.</em>
+            <em>Save your first article...</em>
           </span>
         </h3>
       </li>
     );
-  },
+  }
 
-  renderArticles: function() {
-    return this.state.savedArticles.map(function(article, index) {
+  // A helper method for mapping through our articles and outputting some HTML
+  renderArticles = () => {
+    return this.state.savedArticles.map((article, index) => {
 
       return (
         <div key={index}>
@@ -61,10 +69,11 @@ var Main = React.createClass({
           </li>
         </div>
       );
-    }.bind(this));
-  },
+    });
+  }
 
-  renderContainer: function() {
+  // A helper method for rendering a container and all of our artiles inside
+  renderContainer = () => {
     return (
       <div className="main-container">
         <div className="row">
@@ -86,12 +95,17 @@ var Main = React.createClass({
         </div>
       </div>
     );
-  },
-  render: function() {
+  }
+  // Our render method. Utilizing a few helper methods to keep this logic clean
+  render() {
+    // If we have no articles, we will return this.renderEmpty() which in turn returns some HTML
     if (!this.state.savedArticles) {
       return this.renderEmpty();
     }
+    // If we have articles, return this.renderContainer() which in turn returns all saves articles
     return this.renderContainer();
   }
-});
-module.exports = Main;
+};
+
+// Export the module back to the route
+export default Saved;
