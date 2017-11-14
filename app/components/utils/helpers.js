@@ -10,7 +10,7 @@ var helper = {
     
     var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     queryURL += '?' + $.param({
-      'api-key': "e90e5f67cde643a6af6ae8938e31ee1e",
+      'api-key': "",
       'q': articleSearch.term,
       'begin_date': articleSearch.begin_date + "0101",
       'end_date': articleSearch.end_date + "1231"
