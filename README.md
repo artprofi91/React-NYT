@@ -28,7 +28,7 @@ Clone this repository, install dependencies, then run the project with the follo
 > git clone git@github.com:artprofi91/React-NYT.git
 > cd React-NYT
 > npm install
-> node server.js
+> npm start
 > go to localhost:8080
 ```
 
